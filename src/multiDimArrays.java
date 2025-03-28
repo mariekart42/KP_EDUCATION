@@ -21,29 +21,29 @@ public class multiDimArrays
         {
             System.out.println();
 
-            // Task 1
+            // ReadFiles.Task 1
             int[][] matrix = createMatrix(4, 3);
 
-            // Task 2
+            // ReadFiles.Task 2
             // setMatrixValue(matrix, 0, 0, 99);
             // setMatrixValue(matrix, 0, 1, 99);
             // setMatrixValue(matrix, 0, 2, 99);
 
 
-            // Task 3
+            // ReadFiles.Task 3
             setRandomMatrix(matrix);
 
 
-            // Task 4
+            // ReadFiles.Task 4
 //            PrintMatrix(matrix, false);
 
 
-            // Task 5
+            // ReadFiles.Task 5
 //             PrintMatrix(matrix, false);
 //             PrintMatrix(transposeMatrix(matrix), false);
 
 
-            // Task 6 - 9
+            // ReadFiles.Task 6 - 9
              int[][] randomMatrixB = new int[2][3];
              int[][] randomMatrixA = new int[3][2];
 

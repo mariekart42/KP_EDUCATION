@@ -1,10 +1,9 @@
+package ReadFiles;
+
 import java.io.File;  // Import the File class
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner; // Import the Scanner class to read text files
 
@@ -15,14 +14,10 @@ enum UserInput
     SORT
 }
 
-enum Task
-{
-    SORTED_REGIONS,
-}
-
 
 public class readFiles
 {
+    static final String dataDelimiter = "#";
     private static final String defaultInputFile = "\\\\transfer\\transfer\\ftr\\Aufgaben\\array2\\Aufgabe1.txt";
 
     public static void main(String[] args)
@@ -48,7 +43,7 @@ public class readFiles
             saveTableInCsv(table, "data\\" + outputFilePath + ".csv");
             do {
                 sortedBy = GetUserInput(UserInput.SORT);
-                if (sortedBy.equals("R") || sortedBy.equals("E") || sortedBy.equals("L"))
+                if (!sortedBy.isEmpty())
                     SaveDataSortedByInCsv(table, sortedBy);
 
             } while (!sortedBy.equals("R") && !sortedBy.equals("E") && !sortedBy.equals("L") && !sortedBy.isEmpty());
@@ -58,13 +53,7 @@ public class readFiles
 
 
             // Additionale Tasks:
-            // 10. Es sollen die Regionen mit Anzahl der Länder in einer sortierten Reihenfolge ausgegeben werden.
-            //PrintSortedRegionsWithCountryCount(table);
             AdditionaleTasks(table);
-
-
-
-
         }
         catch (Exception e)
         {
@@ -72,91 +61,18 @@ public class readFiles
         }
     }
 
-    private static void AdditionaleTasks(String[][] table)
-    {
-        Object[] regionData = getDataByRegion(table);
-        String[][] countCountries = (String[][]) regionData[0];
-        String[][][] tableSortedByRegion = (String[][][]) regionData[1];
-
-        // 10. Es sollen die Regionen mit Anzahl der Länder in einer sortierten Reihenfolge ausgegeben werden.
-        PrintSortedRegionsWithCountryCount(countCountries);
-
-        // 11. Es soll das Land mit der größten Bevölkerungszzahl ausgegeben werden
-        PrintCountryWithLargestPopulation(table);
 
 
-        PrintCountryWithLargestName(table);
-    }
-
-
-    /* 10. Es sollen die Regionen mit Anzahl der Länder in einer sortierten Reihenfolge ausgegeben werden. */
-    private static void PrintSortedRegionsWithCountryCount(String[][] countCountries)
-    {
-        String[][] sortRegions = new String[countCountries.length-1][countCountries[0].length];
-        for (int i = 1; i < countCountries.length; i++) {
-            sortRegions[i-1] = countCountries[i].clone();
-        }
-
-        for (int i = 0; i < sortRegions.length - 1; i++)
-        {
-            int minIndex = i;
-            for (int j = i + 1; j < sortRegions.length; j++)
-            {
-                if (sortRegions[j][0].compareTo(sortRegions[minIndex][0]) < 0)
-                    minIndex = j;
-            }
-
-            String[] temp = sortRegions[i];
-            sortRegions[i] = sortRegions[minIndex];
-            sortRegions[minIndex] = temp;
-        }
-
-        System.out.println("\nSORTED REGIONS WITH AMOUNT OF COUNTRIES:");
-        for (String[] countCountry : sortRegions)
-        {
-            System.out.printf("Region: %-25s%s%s\n", countCountry[0], "Amount of countries: ", countCountry[1]);
-        }
-
-    }
-
-
-    /* 11. Es soll das Land mit der größten Bevölkerungszzahl ausgegeben werden */
-    private static void PrintCountryWithLargestPopulation(String[][] table)
-    {
-        int[] population = new int[2];
-        for (int i = 1; i < table.length; i++)
-        {
-            if (Integer.parseInt(table[i][2]) > population[0])
-            {
-                population[0] = i;
-                population[1] = Integer.parseInt(table[i][2]);
-            }
-        }
-        System.out.println("\nCOUNTRY WITH LARGEST POPULATION:");
-        System.out.println("--> " + table[Integer.parseInt(String.valueOf(population[0]))][0] + " - with a population of: " + population[1]);
-    }
-
-
-
-    /* 12. Es soll das Land mit dem längsten Namen ausgegeben werden */
-    private static void PrintCountryWithLargestName(String[][] table)
-    {
-        if (table == null || table.length == 0)
-        {
-            System.out.println("Table is empty.");
-            return;
-        }
-
-        int longestIndex = 1;
-        for (int i = 1; i < table.length; i++)
-        {
-            if (table[i][0].length() > table[longestIndex][0].length())
-                longestIndex = i;
-        }
-        System.out.println("\nCOUNTRY WITH LONGEST NAME:\n--> " + table[longestIndex][0] + " - with " + table[longestIndex][0].length() + " letters.");
-    }
-
-
+    /**
+     * Saves the data sorted by the specified criteria (region, land, or population)
+     *
+     * @param table A 2D array ({@code String[][]}) containing the data to be sorted and saved
+     * @param sortedBy A string representing the criteria by which to sort the data:
+     *                 - "L" for sorting by Land (column 0),
+     *                 - "R" for sorting by Region (column 1),
+     *                 - "E" for sorting by Einwohnerzahl (column 2).
+     * @throws Exception If an error occurs while saving the data or sorting
+     */
     private static void SaveDataSortedByInCsv(String[][] table, String sortedBy) throws Exception {
 
         String filePath = "data\\sorted\\sorted_by_"+sortedBy+".csv";
@@ -179,7 +95,7 @@ public class readFiles
             int minIndex = i;
             for (int k = i + 1; k < sortedTable.length; k++)
             {
-                if (sortedTable[k][sortIndex].compareTo(sortedTable[minIndex][sortIndex]) < 0)
+                if (sortedTable[k][sortIndex].compareTo(sortedTable[minIndex][sortIndex]) < 0)  // a < b
                     minIndex = k;
             }
             String[] temp = sortedTable[i];
@@ -192,6 +108,12 @@ public class readFiles
 
 
 
+    /**
+     * Saves region-specific data into CSV files
+     *
+     * @param table A 2D array ({@code String[][]}) containing the data to be processed and saved
+     * @throws Exception If an error occurs while processing or saving the CSV files
+     */
     private static void SaveRegionDataInCsv(String[][] table) throws Exception {
         Object[] regionData = getDataByRegion(table);
 
@@ -209,11 +131,21 @@ public class readFiles
 
 
 
+    /**
+     * Checks whether a given file path is valid based on the specified file type
+     *
+     * @param filePath The path of the file to validate
+     * @param fileType The type of file being checked (either input or output)
+     * @return {@code true} if the file is valid, otherwise {@code false}
+     */
     private static boolean isValidFile(String filePath, UserInput fileType)
     {
         File file = new File(filePath);
         if (fileType == UserInput.INPUT_FILE_PATH && (!file.canRead() || !file.exists()))
+        {
+            System.out.println("\nCan't read file or doesn't exist: " + filePath);
             return false;
+        }
         file = new File("data\\"+filePath);
         if (fileType == UserInput.OUTPUT_FILE_NAME && file.exists())
             System.out.print("File '" + filePath + "' already exists in data. Gets overridden.");
@@ -222,6 +154,12 @@ public class readFiles
 
 
 
+    /**
+     * Retrieves user input based on the specified input type
+     *
+     * @param userInput The type of input to request from the user
+     * @return The user-provided input as a {@code String}. If sorting is disabled, an empty string is returned
+     */
     private static String GetUserInput(UserInput userInput)
     {
         Scanner sc = new Scanner(System.in);
@@ -253,6 +191,13 @@ public class readFiles
 
 
 
+    /**
+     * Reads the content of a file and converts it into a 2D table.
+     *
+     * @param fileName The name of the file to be read
+     * @return A 2D array ({@code String[][]}) containing the file content, structured as rows and columns
+     * @throws Exception If the file cannot be read or an unexpected error occurs
+     */
     private static String[][] getFileContent(String fileName) throws Exception
     {
         try
@@ -269,7 +214,11 @@ public class readFiles
             {
                 data += sc.nextLine() + '\n';
                 if (rows == 0)
-                    columns = countOccurrences(data, "#");
+                {
+                    columns = countOccurrences(data, dataDelimiter);
+                    if (columns != 3)
+                        throw new Exception("Invalid amount of columns. Counted: " + columns + " expected 3. Make sure to use a delimiter in the input file and to adjust the dataDelimiter in the program.");
+                }
                 rows++;
             }
 
@@ -283,6 +232,28 @@ public class readFiles
 
 
 
+    /**
+     * Counts the occurrences of a specific substring in a given string
+     *
+     * @param data input string in which occurrences are counted
+     * @param c substring to count occurrences of
+     * @return number of times the substring appears in the input string
+     */
+    private static int countOccurrences(String data, String c)
+    {
+        return (data.length() - data.replace(c, "").length()) + 1;
+    }
+
+
+
+    /**
+     * creates a 2D table from a given data string, splitting values by column and row separators
+     *
+     * @param data containing the table data, where columns are separated by {@code dataDelimiter} and rows by '\n'
+     * @param rows amount of rows for the table
+     * @param columns amount of columns for the table
+     * @return A 2D array (table) containing the parsed data
+     */
     private static String[][] initTable(String data, int rows, int columns)
     {
         String[][] table = new String[rows][columns];
@@ -292,8 +263,8 @@ public class readFiles
         {
             for (int k = 0; k < columns; k++)
             {
-                int nextColumnSeparator = data.indexOf('#', startPos+1);
-                int nextRowSeparator = data.indexOf('\n', startPos+1);
+                int nextColumnSeparator = data.indexOf(dataDelimiter, startPos+1); //lol#lol2#hehe\n
+                int nextRowSeparator = data.indexOf('\n', startPos+1);          //lol#lol2#hehe\n
                 if (nextRowSeparator < nextColumnSeparator || nextColumnSeparator == -1)
                 {
                     table[i][k] = data.substring(startPos, nextRowSeparator);
@@ -311,11 +282,28 @@ public class readFiles
 
 
 
+    /**
+     * Saves a 2D array into a CSV file
+     *
+     * @param table data to be saved
+     * @param filePath destination file path
+     * @throws Exception If an error occurs while writing
+     */
     private static void saveTableInCsv(String[][] table, String filePath) throws Exception
     {
         saveTableInCsv(table, filePath, false, 0, false);
     }
 
+    /**
+     * Saves a 2D array into a CSV file with additional options
+     *
+     * @param table data to be saved.
+     * @param filePath destination file path
+     * @param onlyShowCountries If true, only country names are saved
+     * @param amountCountries Total countries count to be appended if {@code printCountCountry} is true
+     * @param printCountCountry If true, appends the total number of countries
+     * @throws Exception If an error occurs while writing
+     */
     private static void saveTableInCsv(String[][] table, String filePath, boolean onlyShowCountries, int amountCountries, boolean printCountCountry) throws Exception
     {
         Files.createDirectories(Paths.get(filePath).getParent());
@@ -347,13 +335,20 @@ public class readFiles
     }
 
 
-
+    /**
+     * Organizes data from a table into regions and counts the number of countries per region
+     *
+     * @param table 2D array containing country data
+     * @return An array containing two elements:
+     *         1. 2D array with the count of countries per region
+     *         2. 3D array where each region's countries are stored
+     */
     private static Object[] getDataByRegion(String[][] table)
     {
-        int amount_regions = getAmountOfRegions(table);
-        String[] regions = getRegions(table, amount_regions);
-        String[][][] lol = new String[amount_regions][table.length][table[0].length];
-        String[][] countCountries = new String[amount_regions][2];
+        int amountRegions = 11;
+        String[] regions = getRegions(table, amountRegions);
+        String[][][] lol = new String[amountRegions][table.length][table[0].length];
+        String[][] countCountries = new String[amountRegions][2];
 
         int y, c = 0;
         for (int i = 0; i < regions.length; i++)
@@ -363,7 +358,7 @@ public class readFiles
             {
                 if (table[k][1].equals(regions[i]))
                 {
-                    lol[i][y][0] = table[k][0];
+                    lol[i][y][0] = table[k][0];// y = y +1
                     lol[i][y][1] = table[k][1];
                     lol[i][y++][2] = table[k][2];
                     c = (countCountries[i][1] == null || countCountries[i][1].isEmpty()) ? 0 : Integer.parseInt(countCountries[i][1]);
@@ -376,7 +371,12 @@ public class readFiles
     }
 
 
-
+    /** function extracts all different regions from data array provided
+     *
+     * @param table contains listed countries, region and population
+     * @param amountRegions amount of different regions
+     * @return Array of different regions
+     */
     private static String[] getRegions(String[][] table, int amountRegions)
     {
         String[] regions = new String[amountRegions];
@@ -401,27 +401,33 @@ public class readFiles
     }
 
 
-    private static int getAmountOfRegions(String[][] table)
-    {
-        // TODO
-        return 11;
-    }
-
-
-    private static int countOccurrences(String data, String c)
-    {
-        return (data.length() - data.replace(c, "").length()) + 1;
-    }
 
     private static void PrintTable(String[][] table)
     {
-        for (int i = 0; i < table.length; i++)
+        for (String[] strings : table)
         {
             for (int k = 0; k < table[0].length; k++)
             {
-                System.out.printf("%-20s\t", table[i][k]);
+                System.out.printf("%-20s\t", strings[k]);
             }
             System.out.println();
         }
+    }
+
+
+
+    private static void AdditionaleTasks(String[][] table)
+    {
+        Object[] regionData = getDataByRegion(table);
+        String[][] countCountries = (String[][]) regionData[0];
+
+        // 10. Es sollen die Regionen mit Anzahl der Länder in einer sortierten Reihenfolge ausgegeben werden.
+        AdditionalTasks.PrintSortedRegionsWithCountryCount(countCountries);
+
+        // 11. Es soll das Land mit der größten Bevölkerungszzahl ausgegeben werden
+        AdditionalTasks.PrintCountryWithLargestPopulation(table);
+
+        // 12. & 13. Es soll das Land mit dem längsten/kürzesten Namen ausgegeben werden
+        AdditionalTasks.PrintCountryWithNameLengths(table);
     }
 }
