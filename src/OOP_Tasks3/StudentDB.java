@@ -30,7 +30,6 @@ public class StudentDB {
 
     public void addStudent(String name, GregorianCalendar birthdate, int matriculationNumber, Course[] courses, char gender)
     {
-        //Student[] newArray = new Student[get_amountStudents() + 1];
         Student[] students = get_students();
 
         if (studentAlreadyExists(matriculationNumber))
@@ -41,20 +40,14 @@ public class StudentDB {
 
         if (get_amountStudents() < get_students().length)
         {
-            for (int i = 0; i < get_amountStudents() + 1; i++)
-            {
-                if (i == get_amountStudents())
-                {
-                    students[i] = new Student(name, birthdate, matriculationNumber, courses, gender);
-                    System.out.println("\n\033[32mAdded Student: " + students[i] + "\033[0m");
-                }
+            students[get_amountStudents()] = new Student(name, birthdate, matriculationNumber, courses, gender);
+            System.out.println("\n\033[32mAdded Student: " + students[get_amountStudents()] + "\033[0m");
 
-            }
-            set_amountStudents(get_amountStudents()+1);
+            set_amountStudents(get_amountStudents() + 1);
             set_students(students);
         }
         else
-            System.out.println("Datenbank ist voll!");
+            System.out.println("DB is full!");
     }
 
     private boolean studentAlreadyExists(int matriculationNumber)
@@ -77,17 +70,21 @@ public class StudentDB {
 
         Student[] newArray = new Student[get_students().length];
         Student[] students = get_students();
+
+        boolean studentFound = false;
         int i = 0, k = 0;
-        for (; k < get_amountStudents(); i++, k++)
+        for (; i < get_amountStudents(); i++)
         {
             if (students[i].get_matriculationNumber() == matriculationNumber)
             {
-                System.out.println("\n\033[31mDeleted Student: " + students[k] + "\033[0m");
-                k++;
+                System.out.println("\n\033[31mDeleted Student: " + students[i] + "\033[0m");
+                studentFound = true;
+                continue;
             }
-            newArray[i] = students[k];
+            newArray[k++] = students[i];
         }
-        if (i == k)
+
+        if (!studentFound)
             System.out.println("Student with Matriculation Number: " + matriculationNumber + " not in DB. Can't delete.");
         else
         {
@@ -163,20 +160,22 @@ public class StudentDB {
         return studentsInCourse;
     }
 
-    public double calculateAverageAge(Student[] students)
-    {
+    public double calculateAverageAge() throws Exception {
         int totalAge = 0;
 
-        for (Student student : students)
+        for (Student student : get_students())
         {
-            totalAge += getStudentAge(student);
+            if (student != null)
+                totalAge += getStudentAge(student);
         }
 
         return (double) totalAge / get_amountStudents();
     }
 
-    public int getStudentAge(Student student)
-    {
+    public int getStudentAge(Student student) throws Exception {
+        if (student == null)
+            throw new Exception("Student doesn't exist. Can't calculate Age.");
+
         GregorianCalendar today = new GregorianCalendar();
         int age = today.get(GregorianCalendar.YEAR) - student.get_birthdate().get(GregorianCalendar.YEAR);
 
@@ -195,6 +194,8 @@ public class StudentDB {
 
         for (Student student : students)
         {
+            if (student == null)
+                continue;
             switch (student.get_gender())
             {
                 case 'M':
@@ -211,9 +212,9 @@ public class StudentDB {
             }
         }
 
-        System.out.println("\nMale Percentage:\t" + ((double) maleCount / get_amountStudents()) * 100 + "%");
-        System.out.println("Female Percentage:\t" + ((double) femaleCount / get_amountStudents()) * 100 + "%");
-        System.out.println("Other Percentage:\t" + ((double) otherCount / get_amountStudents()) * 100 + "%");
+        System.out.printf("\nMale Percentage:\t%.2f%%\n", ((double) maleCount / get_amountStudents()) * 100);
+        System.out.printf("Female Percentage:\t%.2f%%\n", ((double) femaleCount / get_amountStudents()) * 100);
+        System.out.printf("Other Percentage:\t%.2f%%\n", ((double) otherCount / get_amountStudents()) * 100);
     }
 
 
