@@ -34,7 +34,7 @@ public class StudentDB {
 
         if (studentAlreadyExists(matriculationNumber))
         {
-            System.out.println("Student wit Matriculation Number " + matriculationNumber + " already exists in DB");
+            System.out.println("Student with Matriculation Number " + matriculationNumber + " already exists in DB");
             return;
         }
 
@@ -119,7 +119,7 @@ public class StudentDB {
                     return true;
                 break;
             case AGE:
-                if (element1.get_birthdate().compareTo(element2.get_birthdate()) > 0)
+                if (element1.get_birthdate().compareTo(element2.get_birthdate()) < 0)
                     return true;
                 break;
             case MAT_NO:
@@ -152,7 +152,7 @@ public class StudentDB {
             {
                 if (Objects.equals(course.get_name(), courseOfStudent))
                 {
-                    studentsInCourse[k] = String.valueOf(get_students()[i]);
+                    studentsInCourse[k] = get_students()[i].toString();
                     k++;
                 }
             }
