@@ -1,3 +1,5 @@
+package ArrayTasks;
+
 public class ArrayTask {
     public static void main(String[] args)
     {
@@ -6,7 +8,7 @@ public class ArrayTask {
 
         for (int lol2 : lol)
         {
-            System.out.println();
+            System.out.println(lol2);
         }
     }
 }
