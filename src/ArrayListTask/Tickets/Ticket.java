@@ -1,20 +1,18 @@
 package ArrayListTask.Tickets;
 
-import java.time.LocalDateTime;
-
 public abstract class Ticket {
 
     private final int _price; // Der Preis
-    private final LocalDateTime _expirationDate;
     private boolean _validated; // Ungültig, wenn entwertet!
+    private final String _owner;
 
-    public Ticket(int price) {
+    public Ticket(String owner, int price) {
         this._price = price;
-        this._expirationDate = LocalDateTime.now().plusMinutes(2);
+        this._owner = owner;
         this._validated = false;
     }
 
-    public LocalDateTime get_expirationDate() { return _expirationDate; }
+    public String get_owner() { return _owner; }
 
     public int get_price() { return _price; }
     public void entwerten() { _validated = true; }

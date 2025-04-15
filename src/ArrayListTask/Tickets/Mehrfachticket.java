@@ -4,8 +4,8 @@ public class Mehrfachticket extends Ticket {
     private int _zone;
     private int _ridesLeft = 10;
 
-    public Mehrfachticket(int preis, int zone) {
-        super(preis);
+    public Mehrfachticket(String owner, int preis, int zone) {
+        super(owner, preis);
         set_zone(zone);
     }
 

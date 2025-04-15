@@ -1,20 +1,20 @@
 package ArrayListTask.Tickets;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class Einzelticket extends Ticket {
     private int _zone;
-    private LocalTime _validUntil;
+    private final LocalDateTime _validUntil;
 
-    public Einzelticket(int preis, int zone) {
-        super(preis);
+    public Einzelticket(String owner, int preis, int zone) {
+        super(owner, preis);
         set_zone(zone);
+        this._validUntil = LocalDateTime.now().plusHours(2);
     }
 
     public int get_zone() { return _zone; }
     public void set_zone(int _zone) { this._zone = _zone; }
-    public LocalTime get_validUntil() { return _validUntil; }
-    public void set_validUntil(LocalTime _validUntil) { this._validUntil = _validUntil; }
+    public LocalDateTime get_validUntil() { return _validUntil; }
 
     @Override
     public boolean gueltigInZone(int zone) {
@@ -24,6 +24,6 @@ public class Einzelticket extends Ticket {
     @Override
     public String toString()
     {
-        return "\nEinzelticket valid in Zone: " + get_zone();
+        return "\nEinzelticket for " + get_owner() + " valid in Zone: " + get_zone();
     }
 }

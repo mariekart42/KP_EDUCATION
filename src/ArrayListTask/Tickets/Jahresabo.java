@@ -1,10 +1,16 @@
 package ArrayListTask.Tickets;
 
-public class Jahresabo extends Ticket {
+import java.time.LocalDate;
 
-    public Jahresabo(int preis) {
-        super(preis);
+public class Jahresabo extends Ticket {
+    private final LocalDate _validUntil;
+
+    public Jahresabo(String owner, int preis) {
+        super(owner, preis);
+        this._validUntil = LocalDate.of(LocalDate.now().getYear(), 12, 31);
     }
+
+    public LocalDate get_validUntil() { return _validUntil; }
 
     @Override
     public boolean gueltigInZone(int zone) {
@@ -14,6 +20,7 @@ public class Jahresabo extends Ticket {
     @Override
     public String toString()
     {
-        return "\nJahresabo valid in all Zones";
+        return "\nJahresabo valid in all Zones till: " + get_validUntil();
     }
+
 }

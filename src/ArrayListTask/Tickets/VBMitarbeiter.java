@@ -5,4 +5,10 @@ public class VBMitarbeiter extends Person {
     {
         super(name);
     }
+
+    @Override
+    public String toString()
+    {
+        return "I'm VBMitarbeiter " + get_name() + ", i don't need tickets";
+    }
 }
