@@ -1,4 +1,6 @@
 package ArrayListTask.Tickets;
 
-public class Kontrolleur extends Person {
+public interface Kontrolleur {
+    void checkTicket(Person p);
+    int getAmountInvalidTickets();
 }

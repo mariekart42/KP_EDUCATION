@@ -10,4 +10,10 @@ public class Jahresabo extends Ticket {
     public boolean gueltigInZone(int zone) {
         return true;
     }
+
+    @Override
+    public String toString()
+    {
+        return "\nJahresabo valid in all Zones";
+    }
 }
