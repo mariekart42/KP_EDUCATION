@@ -9,6 +9,8 @@ public class program {
 
         Ticket ticket1 = new Einzelticket("fahrgast1", 3, 12);
         Ticket ticket2 = new Einzelticket("fahrgast2", 5, 12);
+        Ticket mehfachticket1 = new Mehrfachticket("fahrgast3", 3, 12, 10);
+        Ticket mehfachticket2 = new Mehrfachticket("fahrgast4", 5, 12, 10);
 
         Fahrgast gast1 = new Fahrgast("fahrgast1", ticket1);
         Fahrgast gast2 = new Fahrgast("fahrgast2", ticket2);

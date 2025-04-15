@@ -13,7 +13,8 @@ public class Jahresabo extends Ticket {
     public LocalDate get_validUntil() { return _validUntil; }
 
     @Override
-    public boolean gueltigInZone(int zone) {
+    public boolean gueltigInZone(int zone)
+    {
         return true;
     }
 
@@ -22,5 +23,4 @@ public class Jahresabo extends Ticket {
     {
         return "\nJahresabo valid in all Zones till: " + get_validUntil();
     }
-
 }
