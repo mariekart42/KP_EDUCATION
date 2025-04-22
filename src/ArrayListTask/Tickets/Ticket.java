@@ -13,8 +13,8 @@ public abstract class Ticket {
     }
 
     public String get_owner() { return _owner; }
-
     public int get_price() { return _price; }
+
     public void entwerten() { _validated = true; }
     public boolean istEntwertet() { return _validated; }
     public abstract boolean gueltigInZone(int zone);
