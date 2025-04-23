@@ -12,10 +12,10 @@ public class program {
         Literal li3 = new Literal(2);
         Literal li4 = new Literal(4);
         Literal li5 = new Literal(7);
-        Addition a = new Addition(li1, li2);
-        Multiplikation m = new Multiplikation(li3, a);
-        Subtraktion s = new Subtraktion(m, li4);
-        Division d = new Division(s, li5);
+//        Addition a = new Addition(li1, li2);
+//        Multiplikation m = new Multiplikation(li3, a);
+//        Subtraktion s = new Subtraktion(m, li4);
+        Division d = new Division(li1, li2);
         System.out.println(d + " = " + d.eval());
     }
 }
